@@ -31,7 +31,7 @@ app.get('/api/courses/:id',(req,res)=>{
         res.send(course);
     })
 
-/* app.post('/api/courses',(req,res)=>{
+app.post('/api/courses',(req,res)=>{
 
 //basic input validation
 //if(!req.body.name || req.body.name.length < 3){
@@ -39,7 +39,7 @@ app.get('/api/courses/:id',(req,res)=>{
 //    return;
 // }
 
-//joi schema for the data object
+/* //joi schema for the data object
 const schema = Joi.object({
     name: Joi.string().min(3).required()
 });
@@ -48,7 +48,13 @@ const result = schema.validate(req.body);
 if (result.error){
     res.status(400).send(result.error.details[0].message);
     return;
-};
+}; */
+
+const {error} = validateCourse(req.body);
+    if (error){
+        res.status(400).send(error.details[0].message);
+        return;
+    };
 
 const course = {
     id: courses.length + 1,
@@ -57,11 +63,11 @@ const course = {
 
 courses.push(course);
 res.send(course);
-}); */
+});
 
-/* app.get('/api/courses',(req,res)=>{
+app.get('/api/courses',(req,res)=>{
     res.send(courses);
-}); */
+});
 
 
 app.put('/api/courses/:id',(req,res) => {
@@ -70,12 +76,11 @@ app.put('/api/courses/:id',(req,res) => {
     if(!course) res.status(404).send("The course with the given ID is not found");
 
     //validate the course, if invalid, return 400
-    const schema = Joi.object({
-        name: Joi.string().min(3).required()
-    });
-    const result = schema.validate(req.body);
-    if (result.error){
-        res.status(400).send(result.error.details[0].message);
+
+   // const result = validateCourse(req.body);
+    const {error} = validateCourse(req.body);
+    if (error){
+        res.status(400).send(error.details[0].message);
         return;
     };
 
@@ -87,7 +92,12 @@ app.put('/api/courses/:id',(req,res) => {
 })
 
 
-
+function validateCourse(course){
+    const schema = Joi.object({
+        name: Joi.string().min(3).required()
+    });
+    return schema.validate(course);
+}
 
 
 //app.listen(3000,()=>{console.log('Listening on port 3000')});
