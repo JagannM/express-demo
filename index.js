@@ -1,15 +1,34 @@
 const Joi = require('joi');
+const morgan = require('morgan');
 const logger = require('./logger');
 const express = require('express');
+const { urlencoded } = require('body-parser');
 const app = express();
-app.use(express.json()); 
 
-app.use(logger);
+console.log(`NODE_ENV : ${process.env.NODE_ENV}`); //to check the app environment
+console.log(`APP : ${app.get('env')}`); //to check the app environment
 
+//app environment checking
+if(app.get('env') === 'development'){
+    app.use(morgan('tiny'));
+    console.log('Morgan enabled...');
+}
+
+
+app.use(express.json()); //built-in middleware
+
+app.use(logger); //custom middleware
+
+//custom middleware
 app.use(function (req,res,next){
     console.log("Authenticating...");
     next();
 });
+
+app.use(express.urlencoded ({extended:true})); //url parsing middleware (built-in)
+app.use(express.static('public')); //to handle static files like images, etc (built-in)
+
+//app.use(morgan('tiny'));  //third party middleware
 
 const courses = [
     {id:1, name:'course1'},
