@@ -1,3 +1,6 @@
+const startUpDebugger = require('debug')('app:startUp');
+const dbDebugger = require('debug')('app:db');
+
 const config = require('config');
 const Joi = require('joi');
 const morgan = require('morgan');
@@ -27,13 +30,17 @@ console.log(`APP : ${app.get('env')}`); //to check the app environment
 //app environment checking  //app.use(morgan('tiny'));  //third party middleware
 if(app.get('env') === 'development'){
     app.use(morgan('tiny'));
-    console.log('Morgan enabled...');
+    //console.log('Morgan enabled...');
+    startUpDebugger('MorganEnabled...');
 }
+
+//dbDebugger
+dbDebugger('Database connected');
 
 //configuration
 console.log('Application name : ' +config.get('name'));
 console.log('Mail Server : ' +config.get('mail.host'));
-console.log('Mail Password : ' +config.get('mail.password'));
+//console.log('Mail Password : ' +config.get('mail.password')); 
 
 const courses = [
     {id:1, name:'course1'},
