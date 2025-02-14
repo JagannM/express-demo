@@ -9,6 +9,13 @@ const express = require('express');
 const { urlencoded } = require('body-parser');
 const app = express();
 
+//templating engine demo
+app.set('view engine','pug');
+app.set('views','./views');
+app.get('/',(req,res)=>{
+    res.render('index',{title:'my app',message:'hello'});
+});
+
 
 app.use(express.json()); //built-in middleware
 
